@@ -1,13 +1,16 @@
-import React, { FormEvent, useContext, useState } from 'react';
-import { Button, Checkbox, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
-import DataTable, { IDataTableStyles, defaultThemes} from 'react-data-table-component';
-import styled from 'styled-components';
-import {FaTrash, FaSave} from 'react-icons/fa';
+import React, { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import {
+  Button, Checkbox, InputLabel, MenuItem, Select, TextField 
+} from '@material-ui/core';
+import DataTable from 'react-data-table-component';
+import {FaTrash, FaSave, FaEraser} from 'react-icons/fa';
 import swal from 'sweetalert';
 
 import { ProductContext, Product } from './context/ProductContext';
-import './styles/style.css';
 import { Header } from './components/Header';
+import {
+  customStyles, DivDatatable, DivMain, FormMain 
+} from './styles/Style';
 
 const categorias = [
   'Arroz',
@@ -22,14 +25,18 @@ const categorias = [
 ];
 
 function App() {
+  const {products, setProducts} = useContext(ProductContext);
+  
   const [sku, setSku] = useState<number>(0);
   const [nome, setNome] = useState<string>('');
   const [preco, setPreco] = useState<string>('');
   const [categoria, setCategoria] = useState<string>('');
   const [selectableRow, setSelectableRow] = useState<Product[]>([]);
   const [toggleCleared, setToggleCleared] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  //Para saber se o formulario está criando um novo produto ou editando um produto existente
+  const [isEditable, setIsEditable] = useState(false);
 
-  const {products, setProducts} = useContext(ProductContext);
   //As colunas da Tabela
   const columns = React.useMemo(() => [
     {
@@ -54,29 +61,64 @@ function App() {
     },
   ],[]);
 
+  const searching  = (
+    <>
+      <TextField
+        type="search"
+        onChange={filterProducts}
+        className="MuiInput-inputTypeSearch"
+        placeholder="Filtrar por nome"
+      />
+      <Button 
+        variant="contained" 
+        onClick={() => setFilteredProducts(products)} 
+        color="primary" 
+        type="button"
+      >
+        <FaEraser/>
+      </Button>
+    </>
+  );
+
   function handleSubmit(form : FormEvent){
     form.preventDefault();
-    const product = {
-      sku, nome, preco, categoria
-    };
-    if(products){
-      setProducts([
-        ...products,
-        product
-      ]);
+    if(isEditable){
+      // 1° passo  ele do vetor
+      const newProducts = products.filter(p => p.sku !== sku);
+      // 2° passo inserir com os novos valores
+      newProducts.push({
+        sku, nome, preco, categoria
+      });
+      setProducts(newProducts);
+      setIsEditable(false);
     }
-    else
-      setProducts([product]);
-    
+    else{
+      //Caso já exista o codigo SKU
+      const skuExist = products.filter(p => p.sku === sku);
+      if(skuExist.length !== 0){
+        swal({
+          title: 'Não foi possivel salvar o produto',
+          text: `Codigo SKU ${sku} já existe`,
+          icon: 'warning',
+        });
+        return ;
+      }
+      const product = { sku, nome, preco, categoria };
+      if(products){
+        setProducts([
+          ...products,
+          product
+        ]);
+      }
+      else
+        setProducts([product]);
+    }  
     //Limpar os campos
     setSku(0);
     setNome('');
     setPreco('');
     setCategoria('');
     
-  }
-  function selectRow(row : Product[]){
-    setSelectableRow(row);
   }
   async function deleteProduct(){
     let isDelete = false;
@@ -90,7 +132,7 @@ function App() {
     .then((willDelete) => isDelete = willDelete);
     if (isDelete) {
       setProducts(products.filter(p => !selectableRow.includes(p)));
-
+      
       swal("Poof! Seu Produto foi apagado!", {
         icon: "success",
       }).then(() => {
@@ -104,10 +146,32 @@ function App() {
       });
     }
   }
- 
+  function editProduct(row: Product, _: MouseEvent){
+    setSku(row.sku);
+    setNome(row.nome);
+    setPreco(row.preco);
+    setCategoria(row.categoria);
+    setIsEditable(true);
+  }
+  function filterProducts(e : ChangeEvent<HTMLInputElement>){
+    const search = String(e.target.value);
+    setFilteredProducts(
+      products.filter(p => p.nome.indexOf(search) !== -1)
+    ); 
+  }
+  function selectRow(row : Product[]){
+    setSelectableRow(row);
+  }
+  
   const deleteRow = (
-    <Button onClick={deleteProduct} variant="text" color="secondary"><FaTrash/></Button>
+    <Button onClick={deleteProduct} variant="text" color="secondary">
+      <FaTrash/>
+    </Button>
   );
+  
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products])
 
   return (
     <div className="App">
@@ -158,16 +222,20 @@ function App() {
         </Button>
         </FormMain>
         <DivDatatable>
+
           <DataTable 
             title="Todos os Produtos" 
-            data={products}
+            data={filteredProducts}
             columns={columns}
             striped
             customStyles={customStyles}
             theme="dark"
+            responsive
+            actions={searching}
             selectableRows
             selectableRowsComponent={Checkbox}
             onSelectedRowsChange={(state) =>  selectRow(state.selectedRows)}
+            onRowClicked={editProduct}
             pagination
             clearSelectedRows={toggleCleared}
             contextActions={deleteRow}
@@ -178,65 +246,3 @@ function App() {
   );
 }
 export default App;
-
-
-const DivMain = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-`;
-const DivDatatable = styled.div`
-  display: flex;
-  flex: 1;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 5%;
-`;
-const FormMain = styled.form`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const customStyles : IDataTableStyles = {
-  pagination: {
-    style: {
-      marginBottom: '3%',
-    },
-  },
-  contextMenu: {
-    style: {
-      backgroundColor: '#555',
-    }
-  },
-  header: {
-    style: {
-      minHeight: '56px',
-      textAlign: 'right',
-      fontSize: 25,
-      marginBottom: '2%',
-    },
-  },
-  headRow: {
-    style: {
-      borderTopStyle: 'solid',
-      borderTopWidth: '1px',
-      borderTopColor: defaultThemes.default.divider.default,
-      fontSize: 20,
-      fontFamily: 'Roboto',
-    },
-  },
-  rows: {
-    style: {
-     fontSize: 15,
-     fontFamily: 'Roboto',
-    },
-    stripedStyle: {
-      backgroundColor: '#333'
-    },
-  },
-};
