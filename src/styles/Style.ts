@@ -45,6 +45,7 @@ export const customStyles : IDataTableStyles = {
    },
    headRow: {
       style: {
+         backgroundColor: '#3d3d3d',
          borderTopStyle: 'solid',
          borderTopWidth: '1px',
          borderTopColor: defaultThemes.default.divider.default,

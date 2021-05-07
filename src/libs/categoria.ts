@@ -8,4 +8,4 @@ export const categorias = [
    'Macarrão instantâneo',
    'Farinha de trigo',
    'Barra de cereal',  
- ];
+ ]; 
