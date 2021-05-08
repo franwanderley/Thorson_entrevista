@@ -15,21 +15,18 @@ interface FormProductProps{
    isEditable: boolean;
    setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 }
-interface ProductForm {
-   sku: number;
-   nome: string;
-   preco: string;
-   categoria: string;
-};
+
 
 
 export function FormProduct({product, isEditable, setIsEditable}: FormProductProps){
    const {onEdit, onSave} = useContext(ProductContext);
-   const { handleSubmit, control, setValue,reset } = useForm<ProductForm>();
+   const { handleSubmit, control, setValue,reset } = useForm<Product>();
 
-   async function onSubmit(newProduct : ProductForm){
+   async function onSubmit(newProduct : Product){
       //Validação
-      const valor = Number(newProduct.preco);
+      //trocar , por ,
+      const arrPreco = newProduct.preco.split(',');
+      const valor = Number( arrPreco.join('.') );
       if(!valor){
          await swal({
             title: 'Não foi possivel salvar o produto!',

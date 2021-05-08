@@ -21,16 +21,14 @@
     {
       "sku": "4",
       "nome": "Gelatina Deliciaaa",
-      "preco": "2,7",
-      "categoria": "Gelatina",
-      "id": "4"
+      "preco": "2,70",
+      "categoria": "Gelatina"
     },
     {
       "sku": "5",
       "nome": "Cremogeno sabor morango",
       "preco": "2,50",
-      "categoria": "Aveia em flocos",
-      "id": "5"
+      "categoria": "Aveia em flocos"
     }
   ]
 }

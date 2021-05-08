@@ -11,7 +11,7 @@ export const DivMain = styled.div`
 export const DivDatatable = styled.div`
    display: flex;
    flex: 1;
-   width: 80%;
+   width: 90%;
    flex-direction: column;
    align-items: center;
    margin-top: 5%;

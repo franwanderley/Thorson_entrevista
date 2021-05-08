@@ -13,6 +13,7 @@ import { Checkbox } from '@material-ui/core';
  import { InputSearch } from '../components/InputSearch';
  import { ButtonRemove } from '../components/ButtonRemove';
 import { FormProduct } from '../components/FormProduct';
+import { ModalDetails } from '../components/ModalDetail';
 
 
 export function Home(){
@@ -78,7 +79,10 @@ export function Home(){
       });
     }
   }
-  function editProduct(row: Product, _: MouseEvent){
+  function openModal(row : Product){
+    ModalDetails({ product : row, editProduct});
+  }
+  function editProduct(row: Product){
     setProductEditable(row);
     setIsEditable(true);
   }
@@ -120,7 +124,7 @@ export function Home(){
                progressComponent={Loading}
                selectableRowsComponent={Checkbox}
                onSelectedRowsChange={state => setSelectableRow(state.selectedRows)}
-               onRowClicked={editProduct}
+               onRowClicked={row => openModal(row)}
                pagination
                clearSelectedRows={toggleCleared}
                contextActions={(<ButtonRemove deleteProduct={deleteProduct}/>)}
