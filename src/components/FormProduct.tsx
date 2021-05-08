@@ -15,14 +15,29 @@ interface FormProductProps{
    isEditable: boolean;
    setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 }
+interface ProductForm {
+   sku: number;
+   nome: string;
+   preco: string;
+   categoria: string;
+};
+
 
 export function FormProduct({product, isEditable, setIsEditable}: FormProductProps){
    const {onEdit, onSave} = useContext(ProductContext);
-   const { handleSubmit, control, setValue,reset } = useForm<Product>();
+   const { handleSubmit, control, setValue,reset } = useForm<ProductForm>();
 
-   async function onSubmit(newProduct : Product){
+   async function onSubmit(newProduct : ProductForm){
       //Validação
       const valor = Number(newProduct.preco);
+      if(!valor){
+         await swal({
+            title: 'Não foi possivel salvar o produto!',
+            text: 'Apenas numeros são aceitos',
+            icon: 'warning'
+         });
+         return ;
+      }
       if(valor <= 0){
          await swal({
             title: 'Não foi possivel salvar o produto!', 
@@ -49,12 +64,22 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
       } 
 
       if(isEditable){
-         onEdit(newProduct);
+         onEdit({
+            sku : newProduct.sku, 
+            nome: newProduct.nome, 
+            preco: newProduct.preco, 
+            categoria: newProduct.categoria
+          });
          setIsEditable(false);
       }
       else{
          try{
-            onSave(newProduct);
+            onSave({
+               sku : newProduct.sku, 
+               nome: newProduct.nome, 
+               preco: newProduct.preco, 
+               categoria: newProduct.categoria
+             });
          }catch(error){
             swal({
                title: 'Não foi possivel salvar o produto',
@@ -69,7 +94,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
 
   useEffect(() => {
      if(isEditable){
-        console.log(product);
+        console.log(product?.preco);
         product?.sku && setValue('sku', product?.sku);
         product?.nome && setValue('nome', product?.nome);
         product?.preco && setValue('preco', product?.preco);
@@ -113,12 +138,12 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             name="preco"
             control={control}
             defaultValue=""
-            rules={{required: true }}
+            rules={{required: true  }}
             render={({ field }) => (
                <TextField
                style={{marginBottom: 10, width: '20%'}} 
                id="standard-basic"
-               type="number" 
+               type="text" 
                label="Preço"
                
                required

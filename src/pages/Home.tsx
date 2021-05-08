@@ -37,7 +37,7 @@ export function Home(){
       sortable: true,
     },
     {
-      name: 'Preço',
+      name: 'Preço R$',
       selector: 'preco',
       sortable: true,
     },
@@ -47,6 +47,10 @@ export function Home(){
       sortable: true,
     },
   ],[]);
+  
+  const Loading = (
+    <h3>Carregando Produtos...</h3>
+  );
 
   async function deleteProduct(){
     let isDelete = false;
@@ -112,6 +116,8 @@ export function Home(){
                responsive
                actions={(<InputSearch filterProducts={filterProducts} />)}
                selectableRows
+               progressPending={products.length <= 1}
+               progressComponent={Loading}
                selectableRowsComponent={Checkbox}
                onSelectedRowsChange={state => setSelectableRow(state.selectedRows)}
                onRowClicked={editProduct}

@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useState } from 'react';
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import { api } from '../services/api';
 
 interface ProductContextData{
    products: Product[];
@@ -18,14 +19,9 @@ interface ProductProviderProps{
 
 export const ProductContext = createContext({} as ProductContextData);
 export function ProductProvider({ children} : ProductProviderProps) {
-   const [products, setProducts] = useState<Product[]>([{
-      sku: 1,
-      nome: 'Feijão carioca Fibra 1kg',
-      preco: '6,50',
-      categoria: 'Feijão',
-   }]);
+   const [products, setProducts] = useState<Product[]>([]);
 
-   function onSave(product : Product){
+   async function onSave(product : Product){
       //Caso já exista o codigo SKU
       const skuExist = products.filter(p => p.sku === product.sku);
       if(skuExist.length !== 0){
@@ -39,18 +35,40 @@ export function ProductProvider({ children} : ProductProviderProps) {
       }
       else
         setProducts([product]);
+      const data = {id: product.sku, ...product};
+
+      //Salvar no servidor
+      await api.post('products', data);
    }
-   function onEdit(product : Product){
+   async function onEdit(product : Product){
       // 1° passo excluir ele do vetor
       const newProducts = products.filter(p => p.sku !== product.sku);
       // 2° passo inserir com os novos valores
       newProducts.push(product);
       setProducts(newProducts);
+      const data = product;
+      //3° Passo salvar no servidor
+      await api.put(`products/${product.sku}`, data);
    }
 
-   function onDelete(selectableRows : Product[]){
+   async function onDelete(selectableRows : Product[]){
       setProducts(products.filter(p => !selectableRows.includes(p)));
+      selectableRows.map(async (sr) => {
+         await api.delete(`products/${sr.sku}`);
+      });
    }
+
+   useEffect(() => {
+      async function getProductsInServer(){
+         const data = await api.get('products')
+         .then(res => res.data)
+         .catch(() => null);
+         
+         if(data)
+            setProducts(data);
+      }
+      getProductsInServer();
+   }, []);
       
     return (
       <ProductContext.Provider value={{products, onSave, onEdit, onDelete}}>
