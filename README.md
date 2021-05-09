@@ -1,6 +1,6 @@
 <div style="display: flex; flex:1; align-items:center">
    <h1 style="text-align: center; display: flex; flex-direction: row; align-items: center;">
-      <img src="./public/logo.png" style="margin-right: 2%; width: 10%" alt="Logo">
+      <img src="./public/favicon.ico" style="margin-right: 2%" alt="Logo">
       Thorson Tecnologia 
    </h1>
    <p>
