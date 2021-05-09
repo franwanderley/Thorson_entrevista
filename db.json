@@ -29,6 +29,13 @@
       "nome": "Cremogeno sabor morango",
       "preco": "2,50",
       "categoria": "Aveia em flocos"
+    },
+    {
+      "sku": "10",
+      "nome": "Feiiidsdsdsds",
+      "preco": "3,70",
+      "categoria": "Caldo de carne",
+      "id": "10"
     }
   ]
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 
 export const api = axios.create({
-   baseURL: 'https://my-json-server.typicode.com/franwanderley/Thorson_entrevista',
+   baseURL: 'http://localhost:3333',
+   //https://my-json-server.typicode.com/franwanderley/Thorson_entrevista
 })
