@@ -2,13 +2,14 @@ import {
    Button, InputLabel, MenuItem, Select, TextField 
 } from '@material-ui/core';
 import React, { useContext, useEffect } from 'react';
-import { FaSave } from 'react-icons/fa';
+import { FaEraser, FaSave } from 'react-icons/fa';
 import swal from 'sweetalert';
 import {Controller, useForm} from 'react-hook-form';
 
 import { categorias } from '../libs/categoria';
 import { FormMain } from '../styles/Style';
 import { Product, ProductContext } from './../context/ProductContext';
+import { Validar } from '../libs/validador';
 
 interface FormProductProps{
    product? : Product;
@@ -24,66 +25,22 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
 
    async function onSubmit(newProduct : Product){
       //Validação
-      //trocar , por ,
-      const arrPreco = newProduct.preco.split(',');
-      const valor = Number( arrPreco.join('.') );
-      if(!valor){
-         await swal({
-            title: 'Não foi possivel salvar o produto!',
-            text: 'Apenas numeros são aceitos',
-            icon: 'warning'
-         });
-         return ;
-      }
-      if(valor <= 0){
-         await swal({
-            title: 'Não foi possivel salvar o produto!', 
-            text: 'Preços iguais ou menor do que 0 não são permitidos', 
-            icon: 'warning'
-         });
-         return ;
-      }
-      if(newProduct.sku <= 0){
-         await swal({
-            title: 'Não foi possivel salvar o produto!', 
-            text: 'Codigo SKU iguais ou menor do que 0 não são permitidos', 
-            icon: 'warning'
-         });
-         return ;
-      }
-      if(newProduct.sku.toString().includes('.') || newProduct.sku.toString().includes(',')){
-         await swal({
-            title: 'Não foi possivel salvar o produto!', 
-            text: 'Pontos e Virgulas não são permitidos no codigo SKU', 
-            icon: 'warning'
-         });
-         return ;
-      } 
+      try{
+         Validar(newProduct);
 
-      if(isEditable){
-         onEdit({
-            sku : newProduct.sku, 
-            nome: newProduct.nome, 
-            preco: newProduct.preco, 
-            categoria: newProduct.categoria
-          });
-         setIsEditable(false);
-      }
-      else{
-         try{
-            onSave({
-               sku : newProduct.sku, 
-               nome: newProduct.nome, 
-               preco: newProduct.preco, 
-               categoria: newProduct.categoria
-             });
-         }catch(error){
-            swal({
-               title: 'Não foi possivel salvar o produto',
-               text: `Codigo SKU ${newProduct.sku} já existe`,
-               icon: 'warning',
-            });
+         if(isEditable){
+            onEdit(newProduct);
+            setIsEditable(false);
          }
+         else{
+            onSave(newProduct);
+         }   
+      }catch(error){
+         swal({
+            title: 'Não foi possivel salvar o produto',
+            text: `${error}`,
+            icon: 'warning',
+         });
       } 
       //Limpar os campos
       reset();
@@ -108,7 +65,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             defaultValue=""
             render={({ field }) => (
             <TextField 
-               style={{marginBottom: 10, width: '20%'}}
+               style={{marginBottom: 10, width: 300, textAlign: 'center'}}
                id="standard-basic" 
                type="text"
                label="Codigo SKU"
@@ -120,10 +77,10 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             name="nome"
             control={control}
             defaultValue=""
-            rules={{ required: true, minLength: 5 }}
+            rules={{ required: true }}
             render={({ field }) => (
             <TextField
-               style={{marginBottom: 10, width: '20%'}} 
+               style={{marginBottom: 10, width: 300}} 
                id="standard-basic"
                type="text" 
                label="Nome do Produto"
@@ -138,7 +95,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             rules={{required: true  }}
             render={({ field }) => (
                <TextField
-               style={{marginBottom: 10, width: '20%'}} 
+               style={{marginBottom: 10, width: 300}} 
                id="standard-basic"
                type="text" 
                label="Preço"
@@ -147,7 +104,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
                {...field}
              />)}
          />
-        <InputLabel id="demo-simple-select-label" style={{marginBottom: 10, width: '20%'}}>Escolha uma Categoria</InputLabel>
+        <InputLabel id="demo-simple-select-label" style={{marginBottom: 10, width: 300}}>Escolha uma Categoria</InputLabel>
         <Controller
             name="categoria"
             control={control}
@@ -155,7 +112,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             rules={{ required: true }}
             render={({ field }) => (
             <Select
-            style={{marginBottom: 15, width: '20%'}}
+            style={{marginBottom: 15, width: 300}}
                labelId="demo-simple-select-label"
                id="demo-simple-select"
                required
@@ -166,9 +123,19 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
             ))}
         </Select>)}
          />
-        <Button variant="contained" type="submit" color="primary">
-          <FaSave style={{marginRight: 5}}/> Salvar
-        </Button>
-        </FormMain>
+         <div style={{display: 'flex', flexDirection: 'row', width: 250, justifyContent: 'space-evenly'}}>
+         <Button variant="contained" type="submit" color="primary">
+            <FaSave style={{marginRight: 5}}/> Salvar
+         </Button>
+         <Button 
+            onClick={() => {reset(); setIsEditable(false)}} 
+            variant="contained" 
+            type="reset" 
+            color="secondary"
+         >
+            <FaEraser style={{marginRight: 5}}/> Limpar
+         </Button>
+        </div>
+      </FormMain>
    );
 }

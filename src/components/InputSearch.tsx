@@ -5,12 +5,13 @@ interface InputSeachProps{
    filterProducts: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const InputSearch = ({filterProducts}: InputSeachProps) => (
-   <TextField
-     type="search"
-     style={{backgroundColor: '#eee', fontSize: 15, padding: '0 1%'}}
-     onChange={filterProducts}
-     className="MuiInput-inputTypeSearch"
-     placeholder="  Filtrar por nome"
-   />
-);
+export const InputSearch = ({filterProducts}: InputSeachProps) => {
+   return (
+      <TextField
+      type="search"
+      onChange={filterProducts}
+      style={{backgroundColor: '#eee', textAlign: 'center', fontSize: 15,margin: '1% 15%', padding: '0 1%'}}
+      placeholder="  Filtrar por nome"
+      />
+   );
+}
