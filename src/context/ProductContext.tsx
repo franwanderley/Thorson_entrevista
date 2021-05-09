@@ -35,7 +35,7 @@ export function ProductProvider({ children} : ProductProviderProps) {
       }
       else
         setProducts([product]);
-      const data = {id: product.sku, ...product};
+      const data = {id: Number(product.sku), ...product};
 
       //Salvar no servidor
       await api.post('products', data);
@@ -48,7 +48,7 @@ export function ProductProvider({ children} : ProductProviderProps) {
       setProducts(newProducts);
       const data = product;
       //3° Passo salvar no servidor
-      await api.put(`products/${product.sku}`, data);
+      await api.put(`products/${Number(product.sku)}`, data);
    }
 
    async function onDelete(selectableRows : Product[]){

@@ -1,10 +1,6 @@
 <div style="display: flex; flex:1; align-items:center">
    <h1 style="text-align: center; display: flex; flex-direction: row; align-items: center;">
-<<<<<<< HEAD
-   <img src="./public/favicon.ico" style="margin-right: 2%" alt="Logo">
-=======
       <img src="./public/favicon.ico" style="margin-right: 2%" alt="Logo">
->>>>>>> 8b4e7623dc30fc55f6c31b03e4e4bec10916d6fc
       Thorson Tecnologia 
    </h1>
    <p>
