@@ -24,7 +24,7 @@
       <li><code>cd 'sua pasta'</code></li>
       <li><code>code .</code> para abrir no VSCode</li>
       <li><code>npm install</code></li>
-      <li>Depois da Instalação roda  <code>expo start</code></li>
+      <li>Depois da Instalação roda  <code>npm start</code></li>
       <li>Depois disso acesse http://localhost:3000</li>
       <li>Ou você pode apenas acessar-lo <a href="https://thorson-entrevista.vercel.app/">neste link</a></li>
    </ul>

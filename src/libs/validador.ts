@@ -10,7 +10,7 @@ export function Validar(product: Product){
    if(valor <= 0){
       throw new Error('Preços iguais ou menor do que 0 não são permitidos');
    }
-   if(product.sku <= 0){
+   if(Number(product.sku) <= 0){
       throw new Error('Codigo SKU iguais ou menor do que 0 não são permitidos');
    }
    if(product.sku.toString().includes('.') || product.sku.toString().includes(',')){

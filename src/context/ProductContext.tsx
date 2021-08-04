@@ -8,7 +8,7 @@ interface ProductContextData{
    onDelete: (selectableRows: Product[]) => void;
 }
 export interface Product{
-   sku: number;
+   sku: string;
    nome: string;
    preco: string;
    categoria: string;
@@ -25,7 +25,7 @@ export function ProductProvider({ children} : ProductProviderProps) {
       //Caso já exista o codigo SKU
       const skuExist = products.filter(p => p.sku === product.sku);
       if(skuExist.length !== 0){
-        throw new Error(`coidgo SKU ${product.sku} já existe!`);
+        throw new Error(`codidgo SKU ${product.sku} já existe!`);
       }
       if(products.length >= 1){
         setProducts([

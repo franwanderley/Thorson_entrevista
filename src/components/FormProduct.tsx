@@ -21,7 +21,7 @@ interface FormProductProps{
 
 export function FormProduct({product, isEditable, setIsEditable}: FormProductProps){
    const {onEdit, onSave} = useContext(ProductContext);
-   const { handleSubmit, control, setValue,reset } = useForm<Product>();
+   const { handleSubmit, control, setValue, reset } = useForm<Product>();
 
    async function onSubmit(newProduct : Product){
       //Validação
@@ -29,6 +29,7 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
          Validar(newProduct);
 
          if(isEditable){
+            console.log('passou aqui!');
             onEdit(newProduct);
             setIsEditable(false);
          }
@@ -49,10 +50,10 @@ export function FormProduct({product, isEditable, setIsEditable}: FormProductPro
   useEffect(() => {
      if(isEditable){
         console.log(product?.preco);
-        product?.sku && setValue('sku', product?.sku);
-        product?.nome && setValue('nome', product?.nome);
-        product?.preco && setValue('preco', product?.preco);
-        product?.categoria && setValue('categoria', product?.categoria);
+        setValue('sku', product?.sku || '');
+        setValue('nome', product?.nome || '');
+        setValue('preco', product?.preco || '');
+        setValue('categoria', product?.categoria || '');
      }
   }, [product, isEditable, setValue]);
 

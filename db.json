@@ -1,39 +1,46 @@
 {
   "products": [
     {
-      "id": "1",
       "sku": "1",
       "nome": "Feijão carioca Fibra 1kg",
-      "preco": "6,50",
-      "categoria": "Feijão"
+      "preco": "6,49",
+      "categoria": "Feijão",
+      "id": 1
     },
     {
-      "id": "2",
       "sku": "2",
       "nome": "Arroz Pop Parborizado 1kg",
-      "preco": "3,50",
-      "categoria": "Arroz"
+      "preco": "3,49",
+      "categoria": "Arroz",
+      "id": 2
     },
     {
-      "id": "3",
       "sku": "3",
       "nome": "Miojo Nissin Sabor Carne",
-      "preco": "0,80",
-      "categoria": "Macarrão instantâneo"
+      "preco": "0,90",
+      "categoria": "Macarrão instantâneo",
+      "id": 3
     },
     {
-      "id": "4",
       "sku": "4",
       "nome": "Gelatina Deliciaaa",
-      "preco": "2,70",
-      "categoria": "Gelatina"
+      "preco": "2,99",
+      "categoria": "Gelatina",
+      "id": 4
     },
     {
-      "id": "5",
       "sku": "5",
-      "nome": "Cremogeno sabor morango",
-      "preco": "2,50",
-      "categoria": "Aveia em flocos"
+      "nome": "Cremogeno sabor flocos",
+      "preco": "2,59",
+      "categoria": "Aveia em flocos",
+      "id": 5
+    },
+    {
+      "sku": "10",
+      "nome": "sei lá o que",
+      "preco": "9,99",
+      "categoria": "Gelatina",
+      "id": 10
     }
   ]
 }
