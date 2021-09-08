@@ -39,7 +39,7 @@
          <li>Editar Produto</li>
          <li>Deletar Produtos</li>
          <li>Modal de Confirmação ao deletar</li>
-         <li>Filtrar por nome os Produtos</li>
+         <li>Procurar por nome os Produtos</li>
          <li>Ordenar por nome, preço e categoria os Produtos</li>
       </ol>
    <h3>👍 Como ajudar</h3>
